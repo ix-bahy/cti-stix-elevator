@@ -1,0 +1,3 @@
+[submodule "submodules/stixmarx"]
+	path = submodules/stixmarx
+	url = https://github.com/ix-bahy/stixmarx.git
