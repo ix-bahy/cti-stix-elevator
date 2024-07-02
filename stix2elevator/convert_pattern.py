@@ -41,7 +41,8 @@ from stix2.patterns import (
     QualifiedObservationExpression, _BooleanExpression, _ComparisonExpression,
     _CompoundObservationExpression, _Constant
 )
-import stixmarx
+import submodules.stixmarx.stixmarx as stixmarx
+
 
 # internal
 from stix2elevator.common import (

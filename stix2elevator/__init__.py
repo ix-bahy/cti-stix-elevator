@@ -10,29 +10,38 @@ import cybox.utils.caches
 import lxml.etree
 from stix2validator import ValidationError, codes, output
 from stix.core import STIXPackage
-import stixmarx
-from stixmarx.container import MarkingContainer
+
+
+import submodules.stixmarx.stixmarx as stixmarx
+from submodules.stixmarx.stixmarx.container import MarkingContainer
 
 # internal
 from stix2elevator.convert_cybox import clear_directory_mappings
-from stix2elevator.convert_pattern import (
-    clear_observable_mappings, clear_pattern_cache
-)
+from stix2elevator.convert_pattern import clear_observable_mappings, clear_pattern_cache
 from stix2elevator.convert_stix import (
-    clear_kill_chains_phases_mapping, clear_location_objects,
-    clear_observed_data_mappings, clear_unfinished_marked_objects,
-    convert_package
+    clear_kill_chains_phases_mapping,
+    clear_location_objects,
+    clear_observed_data_mappings,
+    clear_unfinished_marked_objects,
+    convert_package,
 )
 from stix2elevator.ids import (
-    clear_id_mapping, clear_id_of_obs_in_characterizations,
-    clear_id_of_obs_in_sightings, clear_object_id_mapping
+    clear_id_mapping,
+    clear_id_of_obs_in_characterizations,
+    clear_id_of_obs_in_sightings,
+    clear_object_id_mapping,
 )
 from stix2elevator.options import (
-    get_option_value, get_validator_options, info, set_option_value,
-    setup_logger
+    get_option_value,
+    get_validator_options,
+    info,
+    set_option_value,
+    setup_logger,
 )
 from stix2elevator.utils import (
-    Environment, clear_1x_markings_map, validate_stix2_string
+    Environment,
+    clear_1x_markings_map,
+    validate_stix2_string,
 )
 from stix2elevator.version import __version__  # noqa
 
@@ -111,7 +120,11 @@ def elevate(stix_package):
                 stix_package = io.BytesIO(stix_package)
             container = stixmarx.parse(stix_package)
         else:
-            raise RuntimeError("Unable to resolve object {} of type {}".format(stix_package, type(stix_package)))
+            raise RuntimeError(
+                "Unable to resolve object {} of type {}".format(
+                    stix_package, type(stix_package)
+                )
+            )
 
         container_package = container.package
         set_option_value("marking_container", container)
@@ -124,21 +137,26 @@ def elevate(stix_package):
 
     try:
         setup_logger(container_package.id_)
-        info("Results produced by the stix2-elevator may generate warning messages which should be investigated.", 201)
+        info(
+            "Results produced by the stix2-elevator may generate warning messages which should be investigated.",
+            201,
+        )
         env = Environment(get_option_value("package_created_by_id"))
         json_string = json.dumps(
             convert_package(container_package, env),
             ensure_ascii=False,
             indent=4,
-            separators=(',', ': '),
-            sort_keys=True
+            separators=(",", ": "),
+            sort_keys=True,
         )
 
         bundle_id = re.findall(
             r"bundle--[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}",
-            json_string
+            json_string,
         )
-        validation_results = validate_stix2_string(json_string, validator_options, fn or bundle_id[0])
+        validation_results = validate_stix2_string(
+            json_string, validator_options, fn or bundle_id[0]
+        )
         output.print_results([validation_results])
 
         if get_option_value("policy") == "no_policy":

@@ -6,12 +6,16 @@ import os
 # external
 import pytest
 from stix.core import STIXPackage
-import stixmarx
+import submodules.stixmarx.stixmarx as stixmarx
+
 
 # internal
 from stix2elevator import elevate, options
 from stix2elevator.options import (
-    ElevatorOptions, get_option_value, initialize_options, set_option_value
+    ElevatorOptions,
+    get_option_value,
+    initialize_options,
+    set_option_value,
 )
 from stix2elevator.utils import find_dir, get_environment_variable_value
 
@@ -20,7 +24,7 @@ from stix2elevator.utils import find_dir, get_environment_variable_value
 
 
 def setup_options():
-    version = get_environment_variable_value('VERSION', "2.1")
+    version = get_environment_variable_value("VERSION", "2.1")
     policy = get_environment_variable_value("MISSING_POLICY", "ignore")
 
     initialize_options()
@@ -31,52 +35,129 @@ def setup_options():
     set_option_value("policy", "no_policy")
 
 
-@pytest.mark.parametrize("opts", [
-    ElevatorOptions(policy="no_policy", spec_version=get_environment_variable_value('VERSION'), log_level="DEBUG", disabled=[212, 901]),
-    {"policy": "no_policy", "spec_version": get_environment_variable_value('VERSION'), "log_level": "DEBUG", "disabled": [212, 901]},
-    Namespace(policy="no_policy", spec_version=get_environment_variable_value('VERSION'), log_level="DEBUG", disabled="212,901",
-              file_=None, incidents=False, missing_policy=get_environment_variable_value("MISSING_POLICY"),
-              custom_property_prefix="elevator", infrastructure=False, package_created_by_id=None,
-              default_timestamp=None, validator_args="--strict-types", enabled=None, silent=False,
-              message_log_directory=None, output_directory=None, markings_allowed="", acs=False,
-              ignore_required_properties=False, header_object_type="report"),
-])
+@pytest.mark.parametrize(
+    "opts",
+    [
+        ElevatorOptions(
+            policy="no_policy",
+            spec_version=get_environment_variable_value("VERSION"),
+            log_level="DEBUG",
+            disabled=[212, 901],
+        ),
+        {
+            "policy": "no_policy",
+            "spec_version": get_environment_variable_value("VERSION"),
+            "log_level": "DEBUG",
+            "disabled": [212, 901],
+        },
+        Namespace(
+            policy="no_policy",
+            spec_version=get_environment_variable_value("VERSION"),
+            log_level="DEBUG",
+            disabled="212,901",
+            file_=None,
+            incidents=False,
+            missing_policy=get_environment_variable_value("MISSING_POLICY"),
+            custom_property_prefix="elevator",
+            infrastructure=False,
+            package_created_by_id=None,
+            default_timestamp=None,
+            validator_args="--strict-types",
+            enabled=None,
+            silent=False,
+            message_log_directory=None,
+            output_directory=None,
+            markings_allowed="",
+            acs=False,
+            ignore_required_properties=False,
+            header_object_type="report",
+        ),
+    ],
+)
 def test_setup_options_with_disabled(opts):
     options.ALL_OPTIONS = None  # To make sure we can set it again
     initialize_options(opts)
     assert get_option_value("policy") == "no_policy"
-    assert get_option_value("spec_version") == get_environment_variable_value('VERSION')
+    assert get_option_value("spec_version") == get_environment_variable_value("VERSION")
     assert get_option_value("log_level") == "DEBUG"
     assert get_option_value("disabled") == [212, 901]
 
 
-@pytest.mark.parametrize("opts", [
-    ElevatorOptions(policy="no_policy", spec_version=get_environment_variable_value('VERSION'), log_level="DEBUG", enabled=[212, 901]),
-    {"policy": "no_policy", "spec_version": get_environment_variable_value('VERSION'), "log_level": "DEBUG", "enabled": [212, 901]},
-    Namespace(policy="no_policy", spec_version=get_environment_variable_value('VERSION'), log_level="DEBUG", enabled="212,901",
-              file_=None, incidents=False, missing_policy=get_environment_variable_value("MISSING_POLICY"),
-              custom_property_prefix="elevator", infrastructure=False, package_created_by_id=None,
-              default_timestamp=None, validator_args="--strict-types", disabled=None, silent=False,
-              message_log_directory=None, output_directory=None, markings_allowed="", acs=False,
-              ignore_required_properties=False, header_object_type="report"),
-])
+@pytest.mark.parametrize(
+    "opts",
+    [
+        ElevatorOptions(
+            policy="no_policy",
+            spec_version=get_environment_variable_value("VERSION"),
+            log_level="DEBUG",
+            enabled=[212, 901],
+        ),
+        {
+            "policy": "no_policy",
+            "spec_version": get_environment_variable_value("VERSION"),
+            "log_level": "DEBUG",
+            "enabled": [212, 901],
+        },
+        Namespace(
+            policy="no_policy",
+            spec_version=get_environment_variable_value("VERSION"),
+            log_level="DEBUG",
+            enabled="212,901",
+            file_=None,
+            incidents=False,
+            missing_policy=get_environment_variable_value("MISSING_POLICY"),
+            custom_property_prefix="elevator",
+            infrastructure=False,
+            package_created_by_id=None,
+            default_timestamp=None,
+            validator_args="--strict-types",
+            disabled=None,
+            silent=False,
+            message_log_directory=None,
+            output_directory=None,
+            markings_allowed="",
+            acs=False,
+            ignore_required_properties=False,
+            header_object_type="report",
+        ),
+    ],
+)
 def test_setup_options_with_enabled(opts):
     options.ALL_OPTIONS = None  # To make sure we can set it again
     initialize_options(opts)
     assert get_option_value("policy") == "no_policy"
-    assert get_option_value("spec_version") == get_environment_variable_value('VERSION')
+    assert get_option_value("spec_version") == get_environment_variable_value("VERSION")
     assert get_option_value("log_level") == "DEBUG"
     assert get_option_value("enabled") == [212, 901]
 
 
-@pytest.mark.parametrize("opts", [
-    Namespace(policy="no_policy", spec_version=get_environment_variable_value('VERSION'), log_level="DEBUG", enabled="212,901",
-              file_=None, incidents=False, missing_policy=get_environment_variable_value("MISSING_POLICY"),
-              custom_property_prefix="elevator", infrastructure=False, package_created_by_id=None,
-              default_timestamp=None, validator_args="--strict-types", disabled="902", silent=False,
-              message_log_directory=None, output_directory=None, markings_allowed="", acs=False,
-              ignore_required_properties=False, header_object_type="report"),
-])
+@pytest.mark.parametrize(
+    "opts",
+    [
+        Namespace(
+            policy="no_policy",
+            spec_version=get_environment_variable_value("VERSION"),
+            log_level="DEBUG",
+            enabled="212,901",
+            file_=None,
+            incidents=False,
+            missing_policy=get_environment_variable_value("MISSING_POLICY"),
+            custom_property_prefix="elevator",
+            infrastructure=False,
+            package_created_by_id=None,
+            default_timestamp=None,
+            validator_args="--strict-types",
+            disabled="902",
+            silent=False,
+            message_log_directory=None,
+            output_directory=None,
+            markings_allowed="",
+            acs=False,
+            ignore_required_properties=False,
+            header_object_type="report",
+        ),
+    ],
+)
 def test_setup_options_with_enabled_and_disabled(opts):
     options.ALL_OPTIONS = None  # To make sure we can set it again
     assert not initialize_options(opts)
