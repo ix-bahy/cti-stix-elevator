@@ -1,2 +1,2 @@
 -e .[dev,docs,test]
--e ./stixmarx
+stixmarx @ git+https://github.com/ix-bahy/stixmarx.git
