@@ -41,7 +41,7 @@ except ImportError:
     _acs_import = False
 
 # external
-from stixmarx.stixmarx import navigator
+from stixmarx import navigator
 
 
 # internal

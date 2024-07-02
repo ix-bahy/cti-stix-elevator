@@ -30,12 +30,16 @@ def _initialize_fields():
     utils._load_maec()
     utils._load_mixbox()
 
-    user_path = os.path.join(os.path.expanduser("~"), ".stixmarx")
+    user_path = os.path.join(os.path.expanduser("~"), "")
     if os.path.isdir(user_path) is False:
         os.makedirs(user_path)
         LOG.debug("Created directory '%s'", user_path)
 
-    for loaded_module, module_name in ((utils.stix, "stix"), (utils.cybox, "cybox"), (utils.maec, "maec")):
+    for loaded_module, module_name in (
+        (utils.stix, "stix"),
+        (utils.cybox, "cybox"),
+        (utils.maec, "maec"),
+    ):
         if loaded_module:
             fname = module_name + loaded_module.__version__.replace(".", "") + ".json"
             file_location = os.path.join(user_path, fname)
