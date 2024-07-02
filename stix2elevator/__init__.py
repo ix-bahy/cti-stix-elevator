@@ -12,8 +12,8 @@ from stix2validator import ValidationError, codes, output
 from stix.core import STIXPackage
 
 
-import submodules.stixmarx.stixmarx as stixmarx
-from submodules.stixmarx.stixmarx.container import MarkingContainer
+import submodule.stixmarx.stixmarx as stixmarx
+from submodule.stixmarx.stixmarx.container import MarkingContainer
 
 # internal
 from stix2elevator.convert_cybox import clear_directory_mappings
