@@ -6,7 +6,7 @@ import os
 # external
 import pytest
 from stix.core import STIXPackage
-import submodule.stixmarx.stixmarx as stixmarx
+import stixmarx.stixmarx as stixmarx
 
 
 # internal

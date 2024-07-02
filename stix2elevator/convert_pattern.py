@@ -46,7 +46,7 @@ from stix2.patterns import (
     _CompoundObservationExpression,
     _Constant,
 )
-import submodule.stixmarx.stixmarx as stixmarx
+import stixmarx.stixmarx as stixmarx
 
 
 # internal
